@@ -5,18 +5,18 @@ import {
   Link
 } from 'react-router-dom';
 
-class Post extends Component {
+class User extends Component {
 
   render() {
     let { item, match: { url } } = this.props;
-
+    
     return (
       <div>
-        {item.id} - {item.title} - <Link to={`${url}/${item.id}`}>datails</Link>
-        
+        {item.id} - {item.name} - <Link to={`${url}/${item.id}`}>user info</Link>
+
       </div>
     )
   }
 
 }
-export default withRouter(Post);
+export default withRouter(User);

@@ -1,33 +1,48 @@
 import React, { Component } from 'react';
+import PostService from '../../service/postService';
 import Post from '../post/Post';
+import {
+    Switch,
+    Route,
+    withRouter
+} from 'react-router-dom';
+import FullPost from '../fullPost/FullPost';
+
 
 
 class AllPosts extends Component {
-    state = { posts: [], choseOne: null };
-    
-    onSelectedOne = (id) => {
-        let {posts }= this.state;
-        this.setState({choseOne: posts.find(value => (value.id === id))});
+    postsService = new PostService();
+    state = { posts: [] };
+
+    async componentDidMount() {
+        let posts = await this.postsService.posts();
+        this.setState({ posts });
     }
 
     render() {
-        let {posts, choseOne} = this.state;
+        let { posts } = this.state;
+        let { match: { url } } = this.props;
+
         return (
             <div>
                 {
-                    posts.map(value => (<Post item={value} key={value.id} onSelectedOne = {this.onSelectedOne}/>))
+                    posts.map(value => (<Post item={value} key={value.id} />))
                 }
-                {choseOne && (<h2>{choseOne.id} - {choseOne.title}</h2>)}
+
+                <div>
+
+                    <Switch>
+                        <Route path={`${url}/:id`} render={(props) => {                           
+                            const { match: { params: { id } } } = props;                            
+                            return <FullPost idPost={id} key={id} />
+                        }} />
+                    </Switch>
+                </div>
+
             </div>
         )
     }
-    componentDidMount(){
-        fetch('https://jsonplaceholder.typicode.com/posts')
-        .then(value => value.json())
-        .then(value => {
-            this.setState({posts: value});
-        });
-    }
+
 
 }
-export default AllPosts;
+export default withRouter(AllPosts);
