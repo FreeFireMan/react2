@@ -2,21 +2,14 @@ import React, { Component } from 'react';
 
 import {
   withRouter,
-  Link
+  NavLink
 } from 'react-router-dom';
 
-class User extends Component {
-
-  render() {
-    let { item, match: { url } } = this.props;
-    
+const User =({ item, match: { url } })=> {
     return (
       <div>
-        {item.id} - {item.name} - <Link to={`${url}/${item.id}`}>user info</Link>
-
+        {item.id} - {item.name} - <NavLink to={`${url}/${item.id}`}>user info</NavLink>
       </div>
     )
-  }
-
 }
 export default withRouter(User);

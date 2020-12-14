@@ -1,10 +1,6 @@
 import { Component } from 'react';
 import UserService from '../../service/userService';
-import {
-  Switch,
-  Route,
-  withRouter
-} from 'react-router-dom';
+import { Route,  withRouter} from 'react-router-dom';
 
 
 import User from '../user/User';
@@ -28,16 +24,14 @@ class AllUsers extends Component {
         {
           users.map(value => (<User item={value} key={value.id} />))
         }
-        
+
         <div>
-          <Switch>
             <Route path={`${url}/:id`} render={(props) => {
               let { match: { params: { id } } } = props;
               return <FullUser idUser={id} key={id} />
             }} />
-          </Switch>
         </div>
-        
+
       </div>
     )
   }
