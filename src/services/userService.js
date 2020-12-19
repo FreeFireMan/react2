@@ -1,14 +1,14 @@
 export default class UserService {
     url = 'https://jsonplaceholder.typicode.com/users';
 
-    async user() {
+    async users() {
         return await fetch(this.url)
-            .then(value => value.json());
+            .then(value => value.json())
+
     }
 
-    async userOne(id) {
+    async user(id) {
         return await fetch(this.url + '/' + id)
-            .then(value => value.json());
+            .then(value => value.json())
     }
-
 }

@@ -1,55 +1,77 @@
 import React, { Component } from 'react';
 import './App.css';
-import AllPosts from './components/allPosts/AllPosts';
-import AllUsers from './components/allUsers/AllUsers';
-import AllComments from './components/allComments/AllComments';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from 'react-router-dom';
+import User from './components/User';
+import UserService from './services/userService';
 
 
 class App extends Component {
 
+  inputMain = React.createRef();
+  userService = new UserService();
+  state = { inputValue: 0, 
+            users: [], 
+            user: [],
+            buttonValid: false,
+            formValid: false };
+
+  onInputFill = (val) => {        
+    let validButton = this.validId(val.target.value);    
+    this.setState({ inputValue: this.inputMain.current.value });
+
+  }
+
+  onFormSubmint = (val) => {
+    val.preventDefault();    
+    
+  }
+
+  async toSave(id) {
+    let userId = await this.userService.user(id);
+    let { user } = this.state;
+    user.pop();
+    user.push(userId);
+    this.setState({ user })
+    //this.setState({user: userId})    
+  }
+
+
+  validId(val) {
+   let {users, buttonValid} = this.state;
+   buttonValid = users.find(value => (value.id === +val)) ? true : false;  
+   this.setState({buttonValid}, this.validForm)
+  }
+
+  validForm() {
+    this.setState({formValid: this.state.buttonValid})
+  }
+  
+
+  async componentDidMount() {
+    let users = await this.userService.users();
+    this.setState({ users });
+  }
+ 
+
   render() {
+    let { inputValue, user, formValid } = this.state;
+
     return (
-      <Router>
+      <div>
+        <form onSubmit={this.onFormSubmint}>
+          <input ref={this.inputMain} type={'number'} onInput={this.onInputFill} value={inputValue} />
+          <button onClick={() => { this.toSave(inputValue) }}  disabled={!formValid}>send</button>
+        </form>
+
         <div>
-          <div>
-            <Link to={'/users'}>users</Link>
-          </div>
-          <div>
-            <Link to={'/posts'}>posts</Link>
-          </div>
-          <div>
-            <Link to={'/comments'}>comments</Link>
-          </div>
+          {
+            user.map(value => <User item={value} key={value.id} />)
+          }
 
-          <div className={'app-route'}>
-            <Switch>
-              <Route path={'/users'} render={() => {
-                return <AllUsers />
-              }}>
 
-              </Route>
-
-              <Route path={'/posts'} render={() => {
-                return <AllPosts />;
-              }}>
-              </Route>
-
-              <Route path={'/comments'} render={() => {
-                return <AllComments />;
-              }}>
-              </Route>
-
-            </Switch>
-          </div>
-
+          {/* {user && <div>{user.id} - {user.name} - {user.website}</div>} */}
         </div>
-      </Router>
+
+      </div>
     )
   }
 

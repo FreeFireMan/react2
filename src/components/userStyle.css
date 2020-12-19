@@ -1,0 +1,20 @@
+.user{
+    width: 800px;
+    
+}
+.divBase p{
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: 700;
+}
+.size16{
+    font-size: 16px;
+}
+.boldItl{
+    font-weight: 500;
+    font-style: italic;
+}
+div{
+    font-size: 14px;
+}
+
